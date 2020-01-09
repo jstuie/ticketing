@@ -1,0 +1,3 @@
+rootProject.name = 'TicketingAPI'
+
+include 'api', 'core'
