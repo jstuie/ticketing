@@ -202,6 +202,7 @@ demo = {
             ]
         };
 
+
         // var optionsSales = {
         //   lineSmooth: false,
         //   low: 0,

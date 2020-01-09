@@ -30,9 +30,12 @@
     <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="../assets/css/demo.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link href="../assets/css/Chart.min.css" rel="stylesheet" />
 
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+
+
+
 </head>
 
 <body>
@@ -107,7 +110,7 @@
                                     <h4 class="card-title">예매내역</h4>
                                 </div>
                                 <div class="card-body table-full-width table-responsive">
-                                    <table class="table table-hover table-striped">
+                                    <table id="myTable" class="display" style="width:100%">
                                         <thead>
                                             <th>이름</th>
                                             <th>회차</th>
@@ -115,78 +118,9 @@
                                             <th>인원</th>
                                             <th>배우명</th>
                                             <th>등록일</th>
-                                            <th>수정일</th>
-                                            <th>수정자</th>
-                                            <th>응원메세지</th>
+
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Dakota Rice</td>
-                                                <td>$36,738</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Minerva Hooper</td>
-                                                <td>$23,789</td>
-                                                <td>Curaçao</td>
-                                                <td>Sinaai-Waas</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Sage Rodriguez</td>
-                                                <td>$56,142</td>
-                                                <td>Netherlands</td>
-                                                <td>Baileux</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Philip Chaney</td>
-                                                <td>$38,735</td>
-                                                <td>Korea, South</td>
-                                                <td>Overland Park</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Doris Greene</td>
-                                                <td>$63,542</td>
-                                                <td>Malawi</td>
-                                                <td>Feldkirchen in Kärnten</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>Mason Porter</td>
-                                                <td>$78,615</td>
-                                                <td>Chile</td>
-                                                <td>Gloucester</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                                <td>Niger</td>
-                                                <td>Oud-Turnhout</td>
-                                            </tr>
-                                        </tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -326,6 +260,40 @@
 <!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
 <script src="../assets/js/light-bootstrap-dashboard.js?v=2.0.0 " type="text/javascript"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 <script src="../assets/js/demo.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Javascript method's body can be found in assets/js/demos.js
 
+        //demo.showNotification();
+
+        $('#myTable').DataTable( {
+            "ajax": "data/arrays.txt",
+            "language" : {
+                "sEmptyTable": "데이터가 없습니다",
+                "sInfo": "&nbsp&nbsp&nbsp총 <span style='color:#3b77fb;'>_TOTAL_</span> 건의 데이터가 검색되었습니다.",
+                "sInfoEmpty": "0 - 0 / 0",
+                "sInfoFiltered": "(총 _MAX_ 개)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ",",
+                "sLengthMenu": "&nbsp&nbsp&nbsp&nbsp&nbsp페이지당 줄수 _MENU_",
+                "sLoadingRecords": "읽는중...",
+                "sProcessing": "처리중...",
+                "sSearch": "검색:",
+                "sZeroRecords": "검색 결과가 없습니다",
+                "oPaginate": {
+                    "sFirst": "처음",
+                    "sLast": "마지막",
+                    "sNext": "다음",
+                    "sPrevious": "이전"
+                },
+                "oAria": {
+                    "sSortAscending": ": 오름차순 정렬",
+                    "sSortDescending": ": 내림차순 정렬"
+                }
+            }
+        } );
+    });
+</script>
 </html>
