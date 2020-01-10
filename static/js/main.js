@@ -37,7 +37,7 @@
 //                 alert(item [0]+ ', '+ item [1]); // key, value를 각각 출력
 //             }
 
-            var queryString = "username=admin&password=1&grant_type=password";
+            var queryString = "username="+email+"&password="+pass+"&grant_type=password";
 
             $.ajax({
                 type: "POST",
@@ -50,7 +50,7 @@
                 },
                 success: function (data) {
                 //    eventPlayerKey = data;
-                    alert(JSON.stringify(data));
+                    //alert(JSON.stringify(data));
                     sessionStorage.setItem('access_token', data.access_token);
                     window.location.href = "view/dashboard.html";
                 }

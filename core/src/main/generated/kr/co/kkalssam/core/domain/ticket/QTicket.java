@@ -19,7 +19,7 @@ public class QTicket extends EntityPathBase<Ticket> {
 
     public static final QTicket ticket = new QTicket("ticket");
 
-    public final NumberPath<Integer> actorKey = createNumber("actorKey", Integer.class);
+    public final StringPath actorKey = createString("actorKey");
 
     public final NumberPath<Integer> episode = createNumber("episode", Integer.class);
 

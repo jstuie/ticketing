@@ -181,7 +181,7 @@ demo = {
             },
             success: function (data) {
                 //    eventPlayerKey = data;
-                alert(JSON.stringify(data));
+                //alert(JSON.stringify(data));
                 $('#username').text(data.username);
                 $('#actorname').text(data.actorname);
 
@@ -329,49 +329,59 @@ demo = {
             }]
         ];
 
-        var barOptions = {
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        offsetGridLines: true,
-                        beginAtZero:true
-                    },
-                    ticks: {
-                        beginAtZero:true
-                    }
+
+
+
+        var ctx_live = document.getElementById("myChart");
+        var myChart = new Chart(ctx_live, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    borderWidth: 1,
+                    borderColor:'#00c0ef',
+                    label: 'liveCount',
                 }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: "",
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            max: 100
+                        }
+                    }]
+                }
             }
-        };
-        var ctx = document.getElementById("myChart").getContext("2d");
-
-
-        var barData = {
-            labels: [''],
-            datasets: [{
-                label:'test',
-                barPercentage: 0.5,
-                barThickness: 6,
-                maxBarThickness: 8,
-                minBarLength: 2,
-                data: [10],
-                backgroundColor:'rgba(255, 99, 132, 0.2)'
-
-            }, {
-                label:'test2',
-                barPercentage: 0.5,
-                barThickness: 6,
-                maxBarThickness: 8,
-                minBarLength: 2,
-                data: [30],
-                backgroundColor:'rgba(54, 162, 235, 0.2)'
-            }]
-        };
-
-        var myBarChart = new Chart(ctx, {
-            type: 'horizontalBar',
-            data: barData,
-            options: barOptions
         });
+
+
+        var access_token = window.sessionStorage.getItem("access_token");
+        $.ajax({
+            url: 'http://localhost:8080/v1/admin/dashboard/actor',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Bearer "+access_token);
+            },
+            success: function(data) {
+                for(var i = 0; i<data.length;i ++){
+                    myChart.data.labels.push(data[i].name);
+                    myChart.data.datasets[0].data.push(data[i].cnt);
+                }
+
+                myChart.update();
+            }
+        });
+
 
         var chartActivity = Chartist.Bar('#chartActivity', data, options, responsiveOptions);
 
@@ -452,7 +462,7 @@ demo = {
         //     }
         //   }]
         // ];
-        // var emailsSubscriptionChart = Chartist.Bar('#emailsSubscriptionChart', dataEmailsSubscriptionChart, optionsEmailsSubscriptionChart, responsiveOptions);
+        // var emailsSubscriptionChart = Chartist.Bar('#emailsSubscriptionChart', dataEmailsSubscriptionChart, optionsEmailsSubscriptionChart, responsivemyCharts);
         //
         // //start animation for the Emails Subscription Chart
         // lbd.startAnimationForBarChart(emailsSubscriptionChart);

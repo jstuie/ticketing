@@ -84,7 +84,7 @@
                         <ul class="navbar-nav ml-auto">
 
                             <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
+                                <a class="nav-link" onclick="demo.logout();">
                                     <span class="no-icon">Log out</span>
                                 </a>
                             </li>
@@ -259,9 +259,15 @@
         // Javascript method's body can be found in assets/js/demos.js
 
         //demo.showNotification();
-
+        var access_token = window.sessionStorage.getItem("access_token");
         $('#myTable').DataTable( {
-            "ajax": "data/arrays.txt",
+            "ajax": {
+                'url':"http://localhost:8080/v1/admin/dashboard/ticketing",
+                'type':'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " + access_token);
+                }
+            },
             "language" : {
                 "sEmptyTable": "데이터가 없습니다",
                 "sInfo": "&nbsp&nbsp&nbsp총 <span style='color:#3b77fb;'>_TOTAL_</span> 건의 데이터가 검색되었습니다.",

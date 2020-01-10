@@ -1,5 +1,6 @@
 package kr.co.kkalssam.core.domain.ticket;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -9,5 +10,11 @@ import java.util.List;
  */
 public interface TicketRepository extends CrudRepository<Ticket,Integer> {
 
-    Integer countByEpisode(Integer episode);
+    List<Ticket> findByEpisode(Integer episode);
+    List<Ticket> findAll();
+
+    @Query("select sum(t.number) " +
+            "from Ticket t " +
+            "where t.actorKey LIKE CONCAT('%', :actor, '%') ")
+    Integer sumByActorKeyLike(String actor);
 }

@@ -1,6 +1,8 @@
 package kr.co.kkalssam.core.domain.ticket;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -30,12 +32,14 @@ public class Ticket {
     private Integer number;
 
     @Column(name = "ActorKey")
-    private Integer actorKey;
+    private String actorKey;
 
     @Column(name = "WhenCreated")
+    @CreationTimestamp
     private Date whenCreated;
 
     @Column(name = "WhenModified")
+    @UpdateTimestamp
     private Date whenModified;
 
     @Column(name = "Message")
