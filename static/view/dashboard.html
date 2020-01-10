@@ -87,7 +87,7 @@
 
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
+                                <a class="nav-link" onclick="demo.logout();">
                                     <span class="no-icon">Log out</span>
                                 </a>
                             </li>
@@ -109,16 +109,16 @@
                                         <div class="card-header">
                                             <h4 class="card-title" >1회차</h4>
                                         </div>
-                                        <div class="card-body">
-                                            1명
+                                        <div id="firstEpisode" class="card-body">
+
                                         </div>
                                     </div>
                                     <div class="card">
                                         <div class="card-header">
                                             <h4 class="card-title">4회차</h4>
                                         </div>
-                                        <div class="card-body">
-                                            2명
+                                        <div id="forthEpisode" class="card-body">
+
                                         </div>
                                     </div>
 
@@ -137,16 +137,16 @@
                                     <div class="card-header">
                                         <h4 class="card-title" >2회차</h4>
                                     </div>
-                                    <div class="card-body">
-                                        1명
+                                    <div id="secondEpisode" class="card-body">
+
                                     </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">3회차</h4>
                                     </div>
-                                    <div class="card-body">
-                                        2명
+                                    <div id="thirdEpisode" class="card-body">
+
                                     </div>
                                 </div>
 
@@ -517,6 +517,7 @@
     $(document).ready(function() {
         // Javascript method's body can be found in assets/js/demos.js
         demo.initDashboardPageCharts();
+        demo.getEpisodeInfo();
 
         //demo.showNotification();
 

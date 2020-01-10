@@ -26,6 +26,9 @@ public class Actor implements UserDetails{
     @Column(name = "Username")
     private String username;
 
+    @Column(name = "Actorname")
+    private String actorname;
+
     @Column(name = "Password")
     private String password;
 

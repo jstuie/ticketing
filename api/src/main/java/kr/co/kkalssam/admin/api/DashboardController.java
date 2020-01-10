@@ -21,8 +21,8 @@ public class DashboardController {
     public List<Integer> getTicketingInfo(){
         return dashboadService.getNumberByEpisode();
     }
-    @GetMapping("/day")
-    public List<Integer> getTicketingInfoByDay(){
-        return dashboadService.getNumberEpisodeByDay();
-    }
+//    @GetMapping("/day")
+//    public List<Integer> getTicketingInfoByDay(){
+//        return dashboadService.getNumberEpisodeByDay();
+//    }
 }

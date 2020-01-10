@@ -164,7 +164,55 @@ demo = {
 
         // lbd.startAnimationForLineChart(dailySalesChart);
     },
+    logout: function(){
+      window.sessionStorage.clear();
+      window.location.replace('../index.html');
+    },
 
+    me: function(){
+        var access_token = window.sessionStorage.getItem("access_token");
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/v1/admin/actor",
+            async: false,
+            contentType: " charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Bearer "+access_token);
+            },
+            success: function (data) {
+                //    eventPlayerKey = data;
+                alert(JSON.stringify(data));
+                $('#username').text(data.username);
+                $('#actorname').text(data.actorname);
+
+            }
+
+
+        });
+    },
+    getEpisodeInfo: function(){
+        var access_token = window.sessionStorage.getItem("access_token");
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/v1/admin/dashboard/info",
+            async: false,
+            contentType: " charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Bearer "+access_token);
+            },
+            success: function (data) {
+                //    eventPlayerKey = data;
+
+                $('#firstEpisode').text(data[0]+'명');
+                $('#secondEpisode').text(data[1]+'명');
+                $('#thirdEpisode').text(data[2]+'명');
+                $('#forthEpisode').text(data[3]+'명');
+
+            }
+
+
+        });
+    },
     initDashboardPageCharts: function() {
 
         var dataPreferences = {

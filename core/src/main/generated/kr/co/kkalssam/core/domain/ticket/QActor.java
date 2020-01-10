@@ -19,6 +19,8 @@ public class QActor extends EntityPathBase<Actor> {
 
     public static final QActor actor = new QActor("actor");
 
+    public final StringPath actorname = createString("actorname");
+
     public final NumberPath<Integer> adminUserKey = createNumber("adminUserKey", Integer.class);
 
     public final EnumPath<kr.co.kkalssam.core.enumeration.YesOrNo> isEnable = createEnum("isEnable", kr.co.kkalssam.core.enumeration.YesOrNo.class);
