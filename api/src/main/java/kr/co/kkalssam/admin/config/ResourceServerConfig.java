@@ -24,6 +24,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
                 .antMatchers("/ticket").anonymous()
+                .antMatchers("/ticket/mms").anonymous()
                 .antMatchers("/dashboard/**").authenticated()
                 .antMatchers("/actor/**").authenticated()
                 .antMatchers("/oauth/token").authenticated()

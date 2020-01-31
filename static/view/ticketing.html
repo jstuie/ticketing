@@ -5,6 +5,8 @@
     <title>맘마미아 예매신청</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <style>
         html, body {
             min-height: 100%;
@@ -29,6 +31,46 @@
         h5 {
             margin: 10px 0;
         }
+        .mission-share {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .mission-share-title {
+            font-size: 4.5vw;
+            font-weight: bold;
+        }
+
+        .mission-share-button {
+            margin-top: 3.5vw;
+            padding: 5vw 0;
+            border-radius: 1.5vw;
+            color: #888888;
+            font-size: 3.8vw;
+            text-align: center;
+            border:.3vw solid #ececec;
+        }
+
+        .mission-share-button img{width: 6.5vw; vertical-align: middle;}
+        .mission-share-list{
+            margin-top: 4.5vw;
+        }
+
+        .mission-share-list li{
+            width:calc(100%/4);
+            text-align: center;
+            float:left;
+        }
+
+        .mission-share-list li img{
+            width:12.5vw;
+        }
+
+        .mission-share-text{
+            margin-top:2vw;
+            font-size:3.5vw;
+            color:#8c8c8c;
+        }
         .testbox {
             display: flex;
             justify-content: center;
@@ -38,6 +80,7 @@
             margin:0 auto;
             max-width:800px;
         }
+
         form {
             width: 100%;
             padding: 20px;
@@ -47,7 +90,7 @@
         }
         .banner {
             position: relative;
-            height: 210px;
+
 
             background-size: cover;
             display: flex;
@@ -57,8 +100,16 @@
         }
         .banner::after {
             content: "";
-            background-color: rgba(0, 0, 0, 0.5);
+
             position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .banner img{
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             height: 100%;
         }
@@ -205,9 +256,65 @@
             }
         }
     </style>
+    <style class="cp-pen-styles">.nopad {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    /*image gallery*/
+    .image-checkbox {
+        cursor: pointer;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border: 4px solid transparent;
+        margin-bottom: 0;
+        outline: 0;
+    }
+    .image-checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    .image-checkbox-checked {
+        border-color: #4783B0;
+    }
+    .image-checkbox .fa {
+        position: absolute;
+        color: #4A79A3;
+        background-color: #fff;
+        padding: 10px;
+        top: 0;
+        right: 0;
+    }
+    .image-checkbox-checked .fa {
+        display: block !important;
+    }</style>
 </head>
 <script src="../assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
 <script type="application/javascript">
+    $(document).ready(function() {
+        console.log("test");
+        $(".image-checkbox").each(function () {
+            if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+                $(this).addClass('image-checkbox-checked');
+            }
+            else {
+                $(this).removeClass('image-checkbox-checked');
+            }
+        });
+
+        // sync the state to the input
+        $(".image-checkbox").on("click", function (e) {
+            $(this).toggleClass('image-checkbox-checked');
+            var $checkbox = $(this).find('input[type="checkbox"]');
+            $checkbox.prop("checked",!$checkbox.prop("checked"))
+
+            e.preventDefault();
+        });
+    });
+    // image gallery
+    // init the state from the input
+
+
     function sendTicket() {
         event.preventDefault();
         var chkbox = $('input:checkbox[name="checklist"]');
@@ -223,7 +330,7 @@
                 if(cnt==0) {
                     actorCheck = chkbox[i].value;
                 }else{
-                    actorCheck = chkbox[i].value + ','+(i+1);
+                    actorCheck = chkbox[i].value + ','+actorCheck;
                 }
                 cnt++;
             }
@@ -235,11 +342,33 @@
         var message = $("#message").val();
 
         console.log(name+"-"+episode+"-"+number+"-"+actorCheck+"-"+mobile);
+
+        if(name === ""){
+            alert("예매자 이름을 입력해주세요");
+            return;
+        }
+        if(episode === ""){
+            alert("관람 회차를 선택해주세요");
+            return;
+        }
+        if($.isNumeric(number) === false){
+            alert("예매자 수를 숫자로 입력해주세요");
+            return;
+        }
+        if(actorCheck === ""){
+            alert("응원배우를 입력해주세요");
+            return;
+        }
+        if($.isNumeric(mobile) === false){
+            alert("핸드폰번호를 숫자로 입력해주세요");
+            return;
+        }
+
         var data1 = {name: name, episode: episode,number:number,actorKey:actorCheck,mobile:mobile,message:message};
         var json1 = JSON.stringify(data1);
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/v1/admin/ticket",
+            url: "http://13.124.192.93:8080/v1/admin/ticket",
             data:json1,
             async: false,
             contentType: "application/json; charset=utf-8",
@@ -247,13 +376,44 @@
             success: function (data) {
                 //    eventPlayerKey = data;
                 console.log('success');
+            },
+            error : function(error) {
+                alert("서버 오류 잠시후에 다시 시도해주세요");
+                return;
             }
 
 
         });
 
 
+        var title ="예매완료";
 
+
+        var data2 = {title: title, contents: message,mobile:mobile,actorKey:actorCheck};
+        var json2 = JSON.stringify(data2);
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "http://localhost:8080/v1/admin/ticket/mms",
+        //     data:json2,
+        //     async: false,
+        //     contentType: "application/json; charset=utf-8",
+        //
+        //     success: function (data) {
+        //         //    eventPlayerKey = data;
+        //         console.log('success');
+        //
+        //     },
+        //     error : function(error) {
+        //         alert("서버 오류 잠시후에 다시 시도해주세요");
+        //         return;
+        //     }
+        //
+        //
+        // });
+
+        alert("예매가 완료되었습니다.");
+        window.location.replace("../soon/index.html");
     }
 
 </script>
@@ -261,8 +421,8 @@
 <div class="testbox">
     <form action="/">
         <div class="banner">
-            <h1>깔쌈 14기<br><br>
-                맘마미아 예매신청</h1>
+
+            <img src="../assets/img/banner.png" alt="맘마미아 예매신청">
         </div>
         <div class="item">
             <p>예매자 이름<span class="required">*</span></p>
@@ -274,10 +434,10 @@
 <!--            <i class="fas fa-calendar-alt"></i>-->
             <select id="episode" required>
                 <option value="">회차를 선택해주세요</option>
-                <option value="1">1회차</option>
-                <option value="2">2회차</option>
-                <option value="3">3회차</option>
-                <option value="4">4회차</option>
+                <option value="1">1회차 (2020-02-22 (토) 12:00) </option>
+                <option value="2">2회차 (2020-02-22 (토) 18:00) </option>
+                <option value="3">3회차 (2020-02-23 (일) 12:00) </option>
+                <option value="4">4회차 (2020-02-23 (일) 18:00) </option>
             </select>
         </div>
         <div class="item">
@@ -290,76 +450,372 @@
         </div>
         <div class="question" >
             <p>응원배우<span class="required">*</span></p>
-            <div class="question-answer checkbox-item" style="  padding: 1vw 3vw; box-sizing: border-box;">
-                <input type="checkbox" value="방현지" id="check_1" name="checklist" />
-                <label for="check_1" class="check" ><span>방현지 (도나)</span></label>
-                <input type="checkbox" value="윤여정" id="check_2" name="checklist" />
-                <label for="check_2" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>윤여정 (도나)</span></label>
-                <input type="checkbox" value="곽영준" id="check_3" name="checklist" />
-                <label for="check_3" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>곽영준 (샘)</span></label>
-                <input type="checkbox" value="장동훈" id="check_4" name="checklist" />
-                <label for="check_4" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장동훈 (샘)</span></label>
-                <input type="checkbox" value="변주영" id="check_5" name="checklist" />
-                <label for="check_5" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>변주영 (소피)</span></label>
-                <input type="checkbox" value="임윤진" id="check_6" name="checklist" />
-                <label for="check_6" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>임윤진 (소피)</span></label>
-                <input type="checkbox" value="강우영" id="check_7" name="checklist" />
-                <label for="check_7" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>강우영 (스카이)</span></label>
-                <input type="checkbox" value="한영훈" id="check_8" name="checklist" />
-                <label for="check_8" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>한영훈 (스카이)</span></label>
-                <input type="checkbox" value="안성현" id="check_9" name="checklist" />
-                <label for="check_9" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>안성현 (타냐)</span></label>
-                <input type="checkbox" value="이고은" id="check_10" name="checklist" />
-                <label for="check_10" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이고은 (타냐)</span></label>
-                <input type="checkbox" value="김태현" id="check_11" name="checklist" />
-                <label for="check_11" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김태현 (해리)</span></label>
-                <input type="checkbox" value="이준원" id="check_12" name="checklist" />
-                <label for="check_12" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이준원 (해리)</span></label>
-                <input type="checkbox" value="김정민" id="check_13" name="checklist" />
-                <label for="check_13" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김정민 (로지)</span></label>
-                <input type="checkbox" value="정윤경" id="check_14" name="checklist" />
-                <label for="check_14" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>정윤경 (로지)</span></label>
-                <input type="checkbox" value="김하영" id="check_15" name="checklist" />
-                <label for="check_15" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김하영 (빌)</span></label>
-                <input type="checkbox" value="석정웅" id="check_16" name="checklist" />
-                <label for="check_16" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>석정웅 (빌)</span></label>
-                <input type="checkbox" value="이연주" id="check_17" name="checklist" />
-                <label for="check_17" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이연주 (알리)</span></label>
-                <input type="checkbox" value="이재은" id="check_18" name="checklist" />
-                <label for="check_18" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이재은 (알리)</span></label>
-                <input type="checkbox" value="송혜진" id="check_19" name="checklist" />
-                <label for="check_19" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>송혜진 (리사)</span></label>
-                <input type="checkbox" value="이정수" id="check_20" name="checklist" />
-                <label for="check_20" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이정수 (리사)</span></label>
-                <input type="checkbox" value="이호영" id="check_21" name="checklist" />
-                <label for="check_21" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이호영 (페퍼)</span></label>
-                <input type="checkbox" value="정민재" id="check_22" name="checklist" />
-                <label for="check_22" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>정민재 (페퍼)</span></label>
-                <input type="checkbox" value="김원호" id="check_23" name="checklist" />
-                <label for="check_23" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김원호 (에디)</span></label>
-                <input type="checkbox" value="문인호" id="check_24" name="checklist" />
-                <label for="check_24" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>문인호 (에디)</span></label>
-                <input type="checkbox" value="배경민" id="check_25" name="checklist" />
-                <label for="check_25" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>배경민 (디오)</span></label>
-                <input type="checkbox" value="임재성" id="check_26" name="checklist" />
-                <label for="check_26" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>임재성 (앤드류)</span></label>
-                <input type="checkbox" value="장기연" id="check_27" name="checklist" />
-                <label for="check_27" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장기연 (너레이드)</span></label>
-                <input type="checkbox" value="김성현" id="check_28" name="checklist" />
-                <label for="check_28" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김성현 (칼릭)</span></label>
-                <input type="checkbox" value="김지응" id="check_29" name="checklist" />
-                <label for="check_29" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김지응 (헤로)</span></label>
-                <input type="checkbox" value="김보람" id="check_30" name="checklist" />
-                <label for="check_30" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김보람 (다프네)</span></label>
-                <input type="checkbox" value="양수정`" id="check_31" name="checklist" />
-                <label for="check_31" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>양수정 (제나)</span></label>
-                <input type="checkbox" value="이다혜" id="check_32" name="checklist" />
-                <label for="check_32" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이다혜 (이오)</span></label>
-                <input type="checkbox" value="이화진" id="check_33" name="checklist" />
-                <label for="check_33" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이화진 (라세인)</span></label>
-                <input type="checkbox" value="장남영" id="check_34" name="checklist" />
-                <label for="check_34" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장남영 (비너스)</span></label>
+            <h3>슈퍼팀</h3>
+            <div class="container" style="width: 100%">
+
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center" style="height: 40px">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/방현지.jpg" />
+                        <input type="checkbox" value="방현지" id="check_1" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <i class="fa fa-check hidden"></i>
+                        <div>방현지(도나)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center" style="height: 40px">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/곽영준.jpg" />
+                        <input type="checkbox" value="곽영준" id="check_3" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>곽영준(샘)</div>
+                    </label>
+
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/임윤진.jpg" />
+                        <input type="checkbox" value="임윤진" id="check_6" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>임윤진(소피)</div>
+                    </label>
+
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/한영훈.jpg" />
+                        <input type="checkbox" value="방현지" id="check_8" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>한영훈(스카이)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/안성현.jpg" />
+                        <input type="checkbox" value="안성현" id="check_9" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>안성현(타냐)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/이준원.jpg" />
+                        <input type="checkbox" value="이준원" id="check_12" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이준원(해리)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/정윤경.jpg" />
+                        <input type="checkbox" value="정윤경" id="check_14" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>정윤경(로지)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/김하영.jpg" />
+                        <input type="checkbox" value="방현지" id="check_15" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김하영(빌)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/이호영.jpg" />
+                        <input type="checkbox" value="방현지" id="check_21" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이호영(페퍼)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/이재은.jpg" />
+                        <input type="checkbox" value="이재은" id="check_18" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이재은(알리)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/김원호.jpg" />
+                        <input type="checkbox" value="김원호" id="check_23" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김원호(에디)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/슈퍼팀/송혜진.jpg" />
+                        <input type="checkbox" value="송혜진" id="check_19" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>송혜진(리사)</div>
+                    </label>
+                </div>
+
             </div>
+            <h3>트루퍼팀</h3>
+            <div class="container" style="width: 100%">
+
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/윤여정.jpg" />
+                        <input type="checkbox" value="윤여정" id="check_2" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>윤여정(도나)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/장동훈.jpg" />
+                        <input type="checkbox" value="장동훈" id="check_4" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>장동훈(샘)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/변주영.jpg" />
+                        <input type="checkbox" value="변주영" id="check_5" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>변주영(소피)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/강우영.jpg" />
+                        <input type="checkbox" value="강우영" id="check_7" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>강우영(스카이)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/이고은.jpg" />
+                        <input type="checkbox" value="이고은" id="check_10" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이고은(타냐)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/김태현.jpg" />
+                        <input type="checkbox" value="김태현" id="check_11" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김태현(해리)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/김정민.jpg" />
+                        <input type="checkbox" value="김정민" id="check_13" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김정민(로지)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/석정웅.jpg" />
+                        <input type="checkbox" value="석정웅" id="check_16" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>석정웅(빌)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                <label class="image-checkbox">
+                    <img class="img-responsive" src="../assets/img/actor/트루퍼팀/정민재.jpg" />
+                    <input type="checkbox" value="정민재" id="check_22" name="checklist" />
+                    <i class="fa fa-check hidden"></i>
+                        <div>정민재(페퍼)</div>
+                    </label>
+            </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/이연주.jpg" />
+                        <input type="checkbox" value="이연주" id="check_17" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이연주(알리)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/문인호.jpg" />
+                        <input type="checkbox" value="문인호" id="check_24" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>문인호(에디)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/트루퍼팀/이정수.jpg" />
+                        <input type="checkbox" value="이정수" id="check_20" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이정수(리사)</div>
+                    </label>
+                </div>
+            </div>
+            <h3>앙블리팀</h3>
+            <div class="container" style="width: 100%">
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/안지수.jpg" />
+                        <input type="checkbox" value="안지수" id="check_35" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>안지수(안무감독)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/장기연.jpg" />
+                        <input type="checkbox" value="장기연" id="check_27" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>장기연(너레이드)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/김보람.jpg" />
+                        <input type="checkbox" value="김보람" id="check_30" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김보람(다프네)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/배경민.jpg" />
+                        <input type="checkbox" value="배경민" id="check_25" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>배경민(디오)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/이화진.jpg" />
+                        <input type="checkbox" value="이화진" id="check_33" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이화진(라세인)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/양수정.jpg" />
+                        <input type="checkbox" value="양수정" id="check_31" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>양수정(제나)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/장남영.jpg" />
+                        <input type="checkbox" value="장남영" id="check_34" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>장남영(비너스)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/김성현.jpg" />
+                        <input type="checkbox" value="김성현" id="check_28" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김성현(칼릭스)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="https://images.wallpaperscraft.com/image/screen_tv_test_card_129823_800x1200.jpg" />
+                        <input type="checkbox" value="김지응" id="check_29" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>김지응(헤로)</div>
+                    </label>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/이다혜.jpg" />
+                        <input type="checkbox" value="이다혜" id="check_32" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>이다혜(이오)</div>
+                    </label>
+                </div>
+                
+                <div class="col-xs-4 col-sm-3 col-md-2 nopad text-center">
+                    <label class="image-checkbox">
+                        <img class="img-responsive" src="../assets/img/actor/앙블리팀/임재성.jpg" />
+                        <input type="checkbox" value="임재성" id="check_26" name="checklist" />
+                        <i class="fa fa-check hidden"></i>
+                        <div>임재성(앤드류)</div>
+                    </label>
+                </div>
+
+            </div>
+<!--            <div class="question-answer checkbox-item" style="  padding: 1vw 3vw; box-sizing: border-box;">-->
+<!--                -->
+<!--                <input type="checkbox" value="윤여정" id="check_2" name="checklist" />-->
+<!--                <label for="check_2" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>윤여정 (도나)</span></label>-->
+<!--                <input type="checkbox" value="곽영준" id="check_3" name="checklist" />-->
+<!--                <label for="check_3" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>곽영준 (샘)</span></label>-->
+<!--                <input type="checkbox" value="장동훈" id="check_4" name="checklist" />-->
+<!--                <label for="check_4" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장동훈 (샘)</span></label>-->
+<!--                <input type="checkbox" value="변주영" id="check_5" name="checklist" />-->
+<!--                <label for="check_5" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>변주영 (소피)</span></label>-->
+<!--                <input type="checkbox" value="임윤진" id="check_6" name="checklist" />-->
+<!--                <label for="check_6" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>임윤진 (소피)</span></label>-->
+<!--                <input type="checkbox" value="강우영" id="check_7" name="checklist" />-->
+<!--                <label for="check_7" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>강우영 (스카이)</span></label>-->
+<!--                <input type="checkbox" value="한영훈" id="check_8" name="checklist" />-->
+<!--                <label for="check_8" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>한영훈 (스카이)</span></label>-->
+<!--                <input type="checkbox" value="안성현" id="check_9" name="checklist" />-->
+<!--                <label for="check_9" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>안성현 (타냐)</span></label>-->
+<!--                <input type="checkbox" value="이고은" id="check_10" name="checklist" />-->
+<!--                <label for="check_10" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이고은 (타냐)</span></label>-->
+<!--                <input type="checkbox" value="김태현" id="check_11" name="checklist" />-->
+<!--                <label for="check_11" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김태현 (해리)</span></label>-->
+<!--                <input type="checkbox" value="이준원" id="check_12" name="checklist" />-->
+<!--                <label for="check_12" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이준원 (해리)</span></label>-->
+<!--                <input type="checkbox" value="김정민" id="check_13" name="checklist" />-->
+<!--                <label for="check_13" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김정민 (로지)</span></label>-->
+<!--                <input type="checkbox" value="정윤경" id="check_14" name="checklist" />-->
+<!--                <label for="check_14" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>정윤경 (로지)</span></label>-->
+<!--                <input type="checkbox" value="김하영" id="check_15" name="checklist" />-->
+<!--                <label for="check_15" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김하영 (빌)</span></label>-->
+<!--                <input type="checkbox" value="석정웅" id="check_16" name="checklist" />-->
+<!--                <label for="check_16" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>석정웅 (빌)</span></label>-->
+<!--                <input type="checkbox" value="이연주" id="check_17" name="checklist" />-->
+<!--                <label for="check_17" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이연주 (알리)</span></label>-->
+<!--                <input type="checkbox" value="이재은" id="check_18" name="checklist" />-->
+<!--                <label for="check_18" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이재은 (알리)</span></label>-->
+<!--                <input type="checkbox" value="송혜진" id="check_19" name="checklist" />-->
+<!--                <label for="check_19" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>송혜진 (리사)</span></label>-->
+<!--                <input type="checkbox" value="이정수" id="check_20" name="checklist" />-->
+<!--                <label for="check_20" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이정수 (리사)</span></label>-->
+<!--                <input type="checkbox" value="이호영" id="check_21" name="checklist" />-->
+<!--                <label for="check_21" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이호영 (페퍼)</span></label>-->
+<!--                <input type="checkbox" value="정민재" id="check_22" name="checklist" />-->
+<!--                <label for="check_22" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>정민재 (페퍼)</span></label>-->
+<!--                <input type="checkbox" value="김원호" id="check_23" name="checklist" />-->
+<!--                <label for="check_23" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김원호 (에디)</span></label>-->
+<!--                <input type="checkbox" value="문인호" id="check_24" name="checklist" />-->
+<!--                <label for="check_24" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>문인호 (에디)</span></label>-->
+<!--                <input type="checkbox" value="배경민" id="check_25" name="checklist" />-->
+<!--                <label for="check_25" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>배경민 (디오)</span></label>-->
+<!--                <input type="checkbox" value="임재성" id="check_26" name="checklist" />-->
+<!--                <label for="check_26" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>임재성 (앤드류)</span></label>-->
+<!--                <input type="checkbox" value="장기연" id="check_27" name="checklist" />-->
+<!--                <label for="check_27" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장기연 (너레이드)</span></label>-->
+<!--                <input type="checkbox" value="김성현" id="check_28" name="checklist" />-->
+<!--                <label for="check_28" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김성현 (칼릭)</span></label>-->
+<!--                <input type="checkbox" value="김지응" id="check_29" name="checklist" />-->
+<!--                <label for="check_29" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김지응 (헤로)</span></label>-->
+<!--                <input type="checkbox" value="김보람" id="check_30" name="checklist" />-->
+<!--                <label for="check_30" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>김보람 (다프네)</span></label>-->
+<!--                <input type="checkbox" value="양수정`" id="check_31" name="checklist" />-->
+<!--                <label for="check_31" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>양수정 (제나)</span></label>-->
+<!--                <input type="checkbox" value="이다혜" id="check_32" name="checklist" />-->
+<!--                <label for="check_32" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이다혜 (이오)</span></label>-->
+<!--                <input type="checkbox" value="이화진" id="check_33" name="checklist" />-->
+<!--                <label for="check_33" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>이화진 (라세인)</span></label>-->
+<!--                <input type="checkbox" value="장남영" id="check_34" name="checklist" />-->
+<!--                <label for="check_34" class="check" style="width:100%;display: inline-block; margin-left: auto; margin-right: auto; "><span>장남영 (비너스)</span></label>-->
+<!--            </div>-->
 
 
 <!--                <div style="float:left; width: calc(100%/3); padding: 1vw 3vw; box-sizing: border-box;">-->

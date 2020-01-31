@@ -40,7 +40,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
         if (providedUserEmail.equalsIgnoreCase(actor.getUsername())
                 && providedUserPassword.equals(actor.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
-                    actor.getUsername(),
+                    actor,
                     actor.getPassword(),
                     Collections.singleton(new SimpleGrantedAuthority(actor.getUserRole())));
         }

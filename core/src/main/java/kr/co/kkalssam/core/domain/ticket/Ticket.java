@@ -44,4 +44,7 @@ public class Ticket {
 
     @Column(name = "Message")
     private String message;
+
+    @Column(name = "ModifyActor")
+    private String modifyActor;
 }

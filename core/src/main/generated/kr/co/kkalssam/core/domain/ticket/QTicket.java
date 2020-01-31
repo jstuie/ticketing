@@ -27,6 +27,8 @@ public class QTicket extends EntityPathBase<Ticket> {
 
     public final StringPath mobile = createString("mobile");
 
+    public final StringPath modifyActor = createString("modifyActor");
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> number = createNumber("number", Integer.class);

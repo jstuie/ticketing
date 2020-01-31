@@ -64,6 +64,7 @@ public class DashboardController {
         actorTicketDtoList.add(ActorTicketDto.builder().name("이다혜").cnt(ticketRepository.sumByActorKeyLike("이다혜")).build());
         actorTicketDtoList.add(ActorTicketDto.builder().name("이화진").cnt(ticketRepository.sumByActorKeyLike("이화진")).build());
         actorTicketDtoList.add(ActorTicketDto.builder().name("장남영").cnt(ticketRepository.sumByActorKeyLike("장남영")).build());
+        actorTicketDtoList.add(ActorTicketDto.builder().name("안지수").cnt(ticketRepository.sumByActorKeyLike("안지수")).build());
 
         return actorTicketDtoList;
     }
@@ -76,8 +77,9 @@ public class DashboardController {
         List<String[]> rtnList = new ArrayList<>();
         for (Ticket ticket : ticketList) {
 
-            String[] rtn = new String[6];
+            String[] rtn = new String[8];
 
+            rtn[0] = ticket.getActorKey();
             rtn[0] = ticket.getName();
             rtn[1] = ticket.getEpisode() + "회차";
             rtn[2] = ticket.getMobile();
@@ -86,7 +88,7 @@ public class DashboardController {
 
             SimpleDateFormat yyyyMMddhhmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             rtn[5] = yyyyMMddhhmmss.format(ticket.getWhenCreated());
-
+            rtn[6] = ticket.getModifyActor();
             rtnList.add(rtn);
 
 
@@ -169,6 +171,8 @@ public class DashboardController {
             name = "이화진";
         } else if ("34".equals(actorNumber)) {
             name = "장남영";
+        } else if ("35".equals(actorNumber)) {
+            name = "안지수";
         }
         return name;
     }

@@ -23,9 +23,8 @@ public class ActorController {
 
     @Secured("ROLE_ACTOR")
     @GetMapping
-    Actor me(Principal actor){
-        String actorName = actor.getName();
+    Actor me(@AuthenticationPrincipal Actor actor){
 
-        return actorRepository.findByUsername(actorName);
+        return actor;
     }
 }
